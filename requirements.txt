@@ -1,0 +1,5 @@
+aiofiles~=23.1.0
+pydantic~=2.3.0
+motor~=3.3.1
+aaio~=1.1.8
+aiogram~=3.1.1
