@@ -5,10 +5,5 @@
     "owner": 787751346,
     "debug": true,
     "mongo": ""
-  },
-  "aaio": {
-    "merchant_id": "",
-    "secret": "",
-    "api_key": ""
   }
 }
