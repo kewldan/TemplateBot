@@ -1,15 +1,12 @@
-FROM alpine:latest
+FROM python:3.12
 
-RUN apk update && apk upgrade
-RUN apk add python3 py-pip
-
-WORKDIR /Application
+WORKDIR /usr/app
 COPY requirements.txt ./
-RUN pip install -r requirements.txt
+RUN pip install -r --no-cache-dir requirements.txt
 
 COPY ./src ./src
 COPY ./assets ./assets
 
-ENV PYTHONPATH=/Application/src
+ENV PYTHONPATH=/usr/app/src
 
 CMD [ "python", "src/main.py" ]

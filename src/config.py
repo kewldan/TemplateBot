@@ -26,7 +26,7 @@ async def reload():
             await f.write(json.dumps(config, ensure_ascii=True, sort_keys=True, indent=4))
     else:
         shutil.copyfile(default_config_file, config_file)
-        logging.error('Config was created')
+        logging.error('Config was created, restart needed')
         exit(0)
 
 
