@@ -1,33 +1,40 @@
-import asyncio
+import collections
 import json
 import logging
 import os.path
 import shutil
 
 import aiofiles
-from pydantic.v1.utils import deep_update
+
+import assets
 
 config_file = 'data/config.json'
-default_config_file = os.path.join('assets', 'default_config.json')
 
-config = {}
+config = assets.config
 
 
-async def reload():
+def update(d, u):
+    for k, v in u.items():
+        if isinstance(v, collections.abc.Mapping):
+            d[k] = update(d.get(k, {}), v)
+        else:
+            d[k] = v
+    return d
+
+
+def reload():
     global config
-    async with aiofiles.open(default_config_file, 'r', encoding='utf-8') as f:
-        config = json.loads(await f.read())
 
     if os.path.exists(config_file):
-        async with aiofiles.open(config_file, 'r', encoding='utf-8') as f:
-            user_config = json.loads(await f.read())
-            config = deep_update(config, user_config)
-        async with aiofiles.open(config_file, 'w', encoding='utf-8') as f:
-            await f.write(json.dumps(config, ensure_ascii=True, sort_keys=True, indent=4))
+        with aiofiles.open(config_file, 'r', encoding='utf-8') as f:
+            user_config = json.load(f)
+            config = update(config, user_config)
+        with open(config_file, 'w', encoding='utf-8') as f:
+            json.dump(f, config, ensure_ascii=True, sort_keys=True, indent=4)
     else:
-        shutil.copyfile(default_config_file, config_file)
+        shutil.copyfile('assets/default_config.json', config_file)
         logging.error('Config was created, restart needed')
         exit(0)
 
 
-asyncio.run(reload())
+reload()
