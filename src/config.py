@@ -4,8 +4,6 @@ import logging
 import os.path
 import shutil
 
-import aiofiles
-
 import assets
 
 config_file = 'data/config.json'
@@ -26,11 +24,11 @@ def reload():
     global config
 
     if os.path.exists(config_file):
-        with aiofiles.open(config_file, 'r', encoding='utf-8') as f:
+        with open(config_file, 'r', encoding='utf-8') as f:
             user_config = json.load(f)
             config = update(config, user_config)
         with open(config_file, 'w', encoding='utf-8') as f:
-            json.dump(f, config, ensure_ascii=True, sort_keys=True, indent=4)
+            json.dump(config, f, ensure_ascii=True, sort_keys=True, indent=4)
     else:
         shutil.copyfile('assets/default_config.json', config_file)
         logging.error('Config was created, restart needed')
