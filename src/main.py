@@ -1,14 +1,13 @@
 import asyncio
 import logging
 
+import bot
 import loader
-from bot import TemplateBot
 
 
 async def main():
     logging.basicConfig(level=logging.DEBUG)
 
-    bot = TemplateBot()
     loader.load_dynamics('dynamic')
 
     await bot.start()

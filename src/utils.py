@@ -11,9 +11,11 @@ async def confirm_action(data: Union[Message, CallbackQuery], description: str, 
     builder.button(text='✅ Подтвердить', callback_data=callback_data)
     builder.button(text='❌ Отмена', callback_data='state_clear')
 
-    if type(data) is Message:
+    if isinstance(data, Message):
+        # noinspection PyTypeChecker
         func = data.answer
     else:
+        # noinspection PyTypeChecker
         func = data.message.edit_text
 
     await func(

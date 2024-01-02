@@ -1,24 +1,15 @@
 from aiogram import Dispatcher, Bot, Router
 from aiogram.enums import ParseMode
 
-import config
-from middlewares.user_fetch import UserFetchMiddleware
+from config import config
+
+router = Router()
+
+main_bot = Bot(config['bot']['token'], parse_mode=ParseMode.HTML)
+
+dispatcher = Dispatcher()
+dispatcher.include_router(router)
 
 
-class TemplateBot(Bot):
-    router = Router()
-    instance: Bot
-
-    def __init__(self):
-        super().__init__(config.config['bot']['token'], parse_mode=ParseMode.HTML)
-        self.dp = None
-
-        TemplateBot.router.message.middleware(UserFetchMiddleware())
-        TemplateBot.router.callback_query.middleware(UserFetchMiddleware())
-        TemplateBot.instance = self
-
-    async def start(self):
-        self.dp = Dispatcher()
-        self.dp.include_router(TemplateBot.router)
-
-        await self.dp.start_polling(self)
+async def start():
+    await dispatcher.start_polling(main_bot)
